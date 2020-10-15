@@ -20,6 +20,8 @@ public class CourseOrderImpl implements ICourseOrder {
     public PageResult<CourserOrder> findPageResult(CourserOrder condition, int page, int pagesize) {
         PageResult<CourserOrder> result = new PageResult<CourserOrder>();
         Map<String,Object> map = new HashMap<String,Object>();
+        map.put("start",(page-1)*pagesize);
+        map.put("pageSize",pagesize);
         result.setCode(0);
         //获取总记录数
         int totalCount = courseOrderMapper.findCountByMap(map);
@@ -28,5 +30,10 @@ public class CourseOrderImpl implements ICourseOrder {
         result.setCount(totalCount);
         result.setData(list);
         return result;
+    }
+
+    @Override
+    public void save(CourserOrder cust) {
+        courseOrderMapper.insert(cust);
     }
 }
