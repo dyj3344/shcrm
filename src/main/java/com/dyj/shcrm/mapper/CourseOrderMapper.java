@@ -13,4 +13,8 @@ public interface CourseOrderMapper {
     public List<CourserOrder> findListByMap(Map<String,Object> map);
 
     public void insert(CourserOrder order);
+
+    CourserOrder findByOrderId(String order_id);
+
+    void delete(String order_id);
 }

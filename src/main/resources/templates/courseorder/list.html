@@ -32,9 +32,10 @@
 <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
 
 <script>
+    var $;
     layui.use('table', function(){
         var table = layui.table;
-
+        $ = layui.jquery;
         //温馨提示：默认由前端自动合计当前行数据。从 layui 2.5.6 开始： 若接口直接返回了合计行数据，则优先读取接口合计行数据。
         //详见：https://www.layui.com/doc/modules/table.html#totalRow
         table.render({
@@ -63,7 +64,7 @@
         });
 
         //工具栏事件
-        table.on('toolbar(test)', function(obj){
+          table.on('toolbar(test)', function(obj){
             var checkStatus = table.checkStatus(obj.config.id);
             switch(obj.event){
                 case 'getCheckData':
@@ -93,7 +94,65 @@
                     break;
             };
         });
+        table.on('rowDouble(test)', function(obj){
+            //obj 同上
+            console.log(obj);
+            var orderId = obj.data.order_id;
+            console.log(orderId);
+
+            parent.layer.open({
+                type:2,//2跳转到页面
+                offset: 'auto',
+                title:'课程订单详情',
+                content:'/detail?order_id='+ orderId,
+                area: ['1000px', '500px'],
+                btn:'关闭全部',
+                btnAlign:'c',
+                yes:function () {
+                    parent.layer.closeAll();
+                }
+            });
+        });
+
+        table.on('tool(test)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+            var orderId = obj.data.order_id; //获得order_id
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+
+            if(layEvent === 'del'){ //删除
+                layer.confirm('真的删除行么', function(index){
+                    obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                    layer.close(index);
+
+
+                    $.get("/delete",{order_id:orderId},function (respData) {
+                        console.log(respData);
+                        //console.log(resp);
+                        if(respData.success == 1){
+                            layer.msg("删除成功");
+                        }else{
+                            layer.msg("删除失败" + resp.message);
+                        }
+                    })
+                });
+            } else if(layEvent === 'edit'){ //编辑
+                //弹出编辑页面
+                parent.layer.open({
+                    type:2,//2跳转到页面
+                    offset: 'auto',
+                    title:'【修改】课程订单',
+                    content:'/courseorder/edit?order_id='+orderId,
+                    area: ['1000px', '600px'],
+                    btn:'关闭全部',
+                    btnAlign:'c',
+                    yes:function () {
+                        parent.layer.closeAll();
+                    }
+                });
+            }
+        });
     });
+
+
 </script>
 
 </body>

@@ -36,4 +36,14 @@ public class CourseOrderImpl implements ICourseOrder {
     public void save(CourserOrder cust) {
         courseOrderMapper.insert(cust);
     }
+
+    @Override
+    public CourserOrder findByOrderId(String order_id) {
+        return courseOrderMapper.findByOrderId(order_id);
+    }
+
+    @Override
+    public void delete(String order_id) {
+        courseOrderMapper.delete(order_id);
+    }
 }

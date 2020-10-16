@@ -1,11 +1,13 @@
 package com.dyj.shcrm.web.controller;
 
+import com.dyj.shcrm.mapper.CourseOrderMapper;
 import com.dyj.shcrm.model.CourserOrder;
 import com.dyj.shcrm.model.CurdResult;
 import com.dyj.shcrm.model.PageResult;
 import com.dyj.shcrm.service.ICourseOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -52,4 +54,26 @@ public class CourseOrderController {
         PageResult<CourserOrder> result =iCourseOrder.findPageResult(null,page,limit);
         return result;
     }
+    @RequestMapping("/detail")
+    public String detail(Model model,String order_id){
+
+        CourserOrder order = iCourseOrder.findByOrderId(order_id);
+        model.addAttribute("order",order);
+        return "courseorder/datail";
+    }
+    @RequestMapping("/delete")
+    @ResponseBody
+    public CurdResult  delete(String order_id){
+        CurdResult result =new CurdResult();
+//        System.out.println(order);
+        try {
+            iCourseOrder.delete(order_id);
+            return result;
+        }catch (Exception e) {
+            result.setMsg("删除失败");
+            result.setSuccess(0);
+            return result;
+        }
+    }
+
 }

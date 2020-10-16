@@ -22,4 +22,13 @@
       #{course_price},#{order_date},
       CURRENT_TIMESTAMP(),#{remark});
     </insert>
+
+    <select id="findByOrderId" parameterType="string" resultType="courserOrder">
+        select * from t_course_order where order_id=#{order_id}  ;
+        <!--        <include refid="search_where"></include>-->
+
+    </select>
+    <delete id="delete" parameterType="string">
+        DELETE  FROM t_course_order where order_id=#{order_id}  ;
+    </delete>
 </mapper>
